@@ -1,37 +1,51 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 
+
 #include <bits/stdc++.h>
+#define mod(x) (((x)>=k)?((x)-k):(x))
 using namespace std;
-const int N = 2e6 + 10;
-int q[N], temp[N];
-int n;
-int res;
-void merge_sort(int l, int r)
+
+typedef long long LL;
+const int N = 2021;
+
+LL c[N][N];
+LL n, m;
+LL k, t;
+
+void init()
 {
-	if (l > r)return;
-	if (l == r)
+	c[0][0] = 1;
+	for (int i = 1; i < N; i++)
 	{
-		printf("%d\n", q[l]);
-		return;
+		c[i][0] = 1 % k;
+		for (int j = 1; j <= i; j++)
+		{
+			c[i][j] = mod(c[i - 1][j] + c[i - 1][j - 1]);
+		}
 	}
-	int mid = l + r >> 1;
-	merge_sort(l, mid);
-	merge_sort(mid + 1, r);
-	int k = 0, i = l, j = mid + 1;
-	while (i <= mid&&j <= r)
-	{
-		if (q[i]<q[j])temp[k++] = q[i++];
-		else temp[k++] = q[j++];
+	for (int i = 0; i<N; i++){
+		for (int j = 0; j <= i; j++){
+			if (c[i][j] == 0) c[i][j] = 1;
+			else c[i][j] = 0;
+		}
 	}
-	while (i <= mid)temp[k++] = q[i++];
-	while (j <= r)temp[k++] = q[j++];
-	for (int i = l, j = 0; i <= r;)q[i++] = temp[j++];
-	printf("%d\n", q[mid]);
+	///将二维数组C处理成区间前缀和
+	for (int i = 1; i<N; i++){
+		int s = 0;
+		for (int j = 0; j<N; j++){
+			s += c[i][j];
+			c[i][j] = c[i - 1][j] + s;
+		}
+	}
 }
 int main()
 {
-	cin >> n;
-	for (int i = 0; i < n; i++) cin >> q[i];
-	merge_sort(0, n - 1);
+	scanf("%lld%lld", &t, &k);
+	init();
+	while (t--)
+	{
+		scanf("%lld%lld", &n, &m);
+		printf("%lld\n", c[n][m]);
+	}
 	return 0;
 }
