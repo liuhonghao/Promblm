@@ -1,51 +1,59 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 
+#include <iostream>
+#include <cstdio>
+#include <algorithm>
 
-#include <bits/stdc++.h>
-#define mod(x) (((x)>=k)?((x)-k):(x))
 using namespace std;
 
-typedef long long LL;
-const int N = 2021;
+const int N = 1e6 + 10;
+int q[N];
 
-LL c[N][N];
-LL n, m;
-LL k, t;
-
-void init()
+/*int binarySearch(int q[], int l, int r, int k)
 {
-	c[0][0] = 1;
-	for (int i = 1; i < N; i++)
+	if (l == r)
 	{
-		c[i][0] = 1 % k;
-		for (int j = 1; j <= i; j++)
+		if (q[l] == k)
 		{
-			c[i][j] = mod(c[i - 1][j] + c[i - 1][j - 1]);
+			return l;
 		}
+		else return -1;
 	}
-	for (int i = 0; i<N; i++){
-		for (int j = 0; j <= i; j++){
-			if (c[i][j] == 0) c[i][j] = 1;
-			else c[i][j] = 0;
-		}
+	int mid = l + r >> 1;
+	if (k <= q[mid])//最中间的数大于k k在左边;
+	{
+		binarySearch(q, l, mid, k);
 	}
-	///将二维数组C处理成区间前缀和
-	for (int i = 1; i<N; i++){
-		int s = 0;
-		for (int j = 0; j<N; j++){
-			s += c[i][j];
-			c[i][j] = c[i - 1][j] + s;
-		}
+	else
+	{
+		binarySearch(q, mid + 1, r, k);
 	}
+}*/
+
+int binarySearch(int q[], int l, int r, int k)
+{
+	while (l < r)
+	{
+		int mid = l + r >> 1;
+		if (k <= q[mid]) r = mid;
+		else l = mid + 1;
+	}
+	if (q[l] == k) return l;
+	else return -1;
 }
 int main()
 {
-	scanf("%lld%lld", &t, &k);
-	init();
-	while (t--)
+	int n, m;
+	cin >> n >> m;
+	for (int i = 1; i <= n; i++)
 	{
-		scanf("%lld%lld", &n, &m);
-		printf("%lld\n", c[n][m]);
+		cin >> q[i];
+	}
+	while (m--)
+	{
+		int k;
+		cin >> k;
+		cout << binarySearch(q, 1, n, k) << ' ';
 	}
 	return 0;
 }
